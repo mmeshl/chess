@@ -12,6 +12,18 @@ public record Position(Integer col, Integer row) {
         this(col - 'A', row - 1);
     }
 
+    public Position offset(Integer columnOffset, Integer rowOffset) {
+        return new Position(col + columnOffset, row + rowOffset);
+    }
+
+    public Position oppositeRow(Integer columnOffset, Integer opposingEdgeRow) {
+        return new Position(col + columnOffset, opposingEdgeRow - row - 1);
+    }
+
+    public Position oppositeRow(Integer opposingEdgeRow) {
+        return oppositeRow(0, opposingEdgeRow);
+    }
+
     private static List<List<Position>> range(Integer startX, Integer startY, Integer endX, Integer endY) {
         List<List<Position>> positions = new ArrayList<>();
 
