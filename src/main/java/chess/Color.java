@@ -4,11 +4,10 @@ public enum Color {
     BLACK,
     WHITE;
 
-    @Override
-    public String toString() {
+    public Color getOpposite() {
         return switch (this) {
-            case WHITE -> "w";
-            case BLACK -> "b";
+            case WHITE -> BLACK;
+            case BLACK -> WHITE;
         };
     }
 
