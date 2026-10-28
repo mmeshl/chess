@@ -23,7 +23,8 @@ public final class PawnStrategy extends PieceStrategy implements IPieceStrategy 
 
     @Override
     public Stream<Position> getValidMoves(Position position, Color color, Board board) {
-        return Stream.concat(getNonCapturingMoves(position, color, board), getCapturingMoves(position, color, board));
+        return Stream.concat(getNonCapturingMoves(position, color, board), getCapturingMoves(position, color, board))
+                .filter(move -> !board.piecesBetween(position, move));
     }
 
     @Override
