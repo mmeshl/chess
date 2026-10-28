@@ -49,7 +49,7 @@ public final class BoardFactory {
     }
 
     public Board createStandardBoard() {
-        final Board board = new Board(squaresFromPositions(getStandardPositions()));
+        final Board board = new Board(squaresFromPositions(getStandardPositions()), positionFactory);
         placeStandardPieces(board);
         return board;
     }
@@ -58,7 +58,7 @@ public final class BoardFactory {
         final Position start = positionFactory.create('A', 1);
         final Position end = start.offset(width - 1, height - 1);
 
-        final Board board = new Board(squaresFromPositions(positionFactory.create2dGrid(start, end)));
+        final Board board = new Board(squaresFromPositions(positionFactory.create2dGrid(start, end)), positionFactory);
         pieces.forEach(board::placePiece);
         return board;
     }
