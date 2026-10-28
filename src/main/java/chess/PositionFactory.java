@@ -33,6 +33,51 @@ public final class PositionFactory {
         return create2dGrid(start.col(), start.row(), end.col(), end.row());
     }
 
+    public List<Position> createExclusiveRange(Position start, Position end) {
+        final List<Integer> columns = createExclusiveIntRange(start.col(), end.col());
+        final List<Integer> rows = createExclusiveIntRange(start.row(), end.row());
+
+        if (columns.size() == 1) {
+            return createVerticalRange(columns.getFirst(), rows);
+        } else if (rows.size() == 1) {
+            return createHorizontalRange(columns, rows.getFirst());
+        } else if (columns.size() == rows.size()) {
+            return createDiagonalRange(columns, rows);
+        } else {
+            throw new IllegalStateException();
+        }
+    }
+
+    private List<Position> createHorizontalRange(List<Integer> columns, Integer row) {
+        return columns.stream().map(col -> new Position(col, row)).toList();
+    }
+
+    private List<Position> createVerticalRange(Integer col, List<Integer> rows) {
+        return rows.stream().map(row -> new Position(col, row)).toList();
+    }
+
+    private List<Position> createDiagonalRange(List<Integer> columns, List<Integer> rows) {
+        assert columns.size() == rows.size();
+
+        final List<Position> positions = new ArrayList<>();
+        for (int i = 0; i < columns.size(); i++) {
+            positions.add(new Position(columns.get(i), rows.get(i)));
+        }
+        return positions;
+    }
+
+    private List<Integer> createExclusiveIntRange(Integer start, Integer end) {
+        if (start.equals(end)) {
+            return List.of(start);
+        } else if (start > end) {
+            start ^= end;
+            end ^= start;
+            start ^= end;
+        }
+
+        return IntStream.range(start + 1, end).boxed().toList();
+    }
+
     private Stream<Character> intsToChars(Stream<Integer> ints) {
         return ints.map(this::intToChar);
     }
