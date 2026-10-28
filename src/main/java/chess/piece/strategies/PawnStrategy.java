@@ -21,9 +21,14 @@ public final class PawnStrategy extends PieceStrategy implements IPieceStrategy 
         return "\uDB82\uDC59";
     }
 
-    public List<Position> getValidMoves(Position position, Color color, Board board) {
-        return Stream.concat(getNonCapturingMoves(position, color, board), getCapturingMoves(position, color, board))
-                .toList();
+    @Override
+    public Stream<Position> getValidMoves(Position position, Color color, Board board) {
+        return Stream.concat(getNonCapturingMoves(position, color, board), getCapturingMoves(position, color, board));
+    }
+
+    @Override
+    public void doMove() {
+        firstMove = false;
     }
 
     private Stream<Position> getNonCapturingMoves(Position position, Color color, Board board) {
@@ -32,7 +37,7 @@ public final class PawnStrategy extends PieceStrategy implements IPieceStrategy 
 
         moves.add(position.offset(0, direction));
         if (firstMove) {
-            moves.add(position.offset(+1, direction * 2));
+            moves.add(position.offset(0, direction * 2));
         }
 
         return moves.stream().filter(move -> board.inBounds(move) && !board.hasPiece(move));

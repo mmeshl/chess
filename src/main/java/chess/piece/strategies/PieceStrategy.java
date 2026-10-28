@@ -1,6 +1,11 @@
 package chess.piece.strategies;
 
+import chess.Color;
+import chess.Position;
+import chess.board.Board;
 import chess.piece.PieceName;
+
+import java.util.stream.Stream;
 
 public abstract class PieceStrategy {
     private final PieceName pieceName;
@@ -16,5 +21,9 @@ public abstract class PieceStrategy {
         }
 
         return this.pieceName.equals(other.pieceName);
+    }
+
+    public Stream<Position> getValidMoves(Position position, Color color, Board board) {
+        return Stream.empty();
     }
 }

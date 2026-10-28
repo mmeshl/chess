@@ -1,7 +1,12 @@
 package chess.piece;
 
 import chess.Color;
+import chess.Position;
+import chess.board.Board;
 import chess.piece.strategies.IPieceStrategy;
+
+import java.util.List;
+import java.util.Optional;
 
 public final class Piece {
     private final Color color;
@@ -28,5 +33,17 @@ public final class Piece {
 
     public Color getColor() {
         return color;
+    }
+
+    public List<Position> getValidMoves(Position position, Board board) {
+        return strategy.getValidMoves(position, color, board).toList();
+    }
+
+    public Optional<Piece> move(Position currentPosition, Position nextPosition, Board board) {
+        assert getValidMoves(currentPosition, board).stream()
+                .anyMatch(position -> position.equals(nextPosition));
+
+        strategy.doMove();
+        return board.movePiece(currentPosition, nextPosition);
     }
 }
