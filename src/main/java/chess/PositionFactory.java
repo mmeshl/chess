@@ -37,12 +37,12 @@ public final class PositionFactory {
         final List<Integer> columns = createExclusiveIntRange(start.col(), end.col());
         final List<Integer> rows = createExclusiveIntRange(start.row(), end.row());
 
-        if (columns.size() == 1) {
-            return createVerticalRange(columns.getFirst(), rows);
-        } else if (rows.size() == 1) {
-            return createHorizontalRange(columns, rows.getFirst());
-        } else if (columns.size() == rows.size()) {
+        if (columns.size() == rows.size()) {
             return createDiagonalRange(columns, rows);
+        } else if (columns.isEmpty()) {
+            return createVerticalRange(start.col(), rows);
+        } else if (rows.isEmpty()) {
+            return createHorizontalRange(columns, start.row());
         } else {
             throw new IllegalStateException();
         }
@@ -67,15 +67,27 @@ public final class PositionFactory {
     }
 
     private List<Integer> createExclusiveIntRange(Integer start, Integer end) {
+        return createInclusiveIntRange(start, end).stream()
+                .filter(n -> !n.equals(start))
+                .filter(n -> !n.equals(end))
+                .toList();
+    }
+
+    private List<Integer> createInclusiveIntRange(Integer start, Integer end) {
         if (start.equals(end)) {
             return List.of(start);
-        } else if (start > end) {
-            start ^= end;
-            end ^= start;
-            start ^= end;
         }
 
-        return IntStream.range(start + 1, end).boxed().toList();
+        final List<Integer> range = new ArrayList<>();
+
+        for (int n = start; n <= end; n++) {
+            range.add(n);
+        }
+        for (int n = start; n >= end; n--) {
+            range.add(n);
+        }
+
+        return range;
     }
 
     private Stream<Character> intsToChars(Stream<Integer> ints) {

@@ -40,8 +40,7 @@ public final class Piece {
     }
 
     public Optional<Piece> move(Position currentPosition, Position nextPosition, Board board) {
-        assert getValidMoves(currentPosition, board).stream()
-                .anyMatch(position -> position.equals(nextPosition));
+        assert getValidMoves(currentPosition, board).contains(nextPosition);
 
         strategy.doMove();
         return board.movePiece(currentPosition, nextPosition);

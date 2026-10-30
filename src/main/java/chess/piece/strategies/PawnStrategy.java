@@ -24,7 +24,7 @@ public final class PawnStrategy extends PieceStrategy implements IPieceStrategy 
     @Override
     public Stream<Position> getValidMoves(Position position, Color color, Board board) {
         return Stream.concat(getNonCapturingMoves(position, color, board), getCapturingMoves(position, color, board))
-                .filter(move -> !board.piecesBetween(position, move));
+                .filter(move -> board.inBounds(move) && !board.piecesBetween(position, move));
     }
 
     @Override
@@ -41,14 +41,14 @@ public final class PawnStrategy extends PieceStrategy implements IPieceStrategy 
             moves.add(position.offset(0, direction * 2));
         }
 
-        return moves.stream().filter(move -> board.inBounds(move) && !board.hasPiece(move));
+        return moves.stream().filter(move -> !board.hasPiece(move));
     }
 
     private Stream<Position> getCapturingMoves(Position position, Color color, Board board) {
         final Integer direction = getMoveDirection(color);
 
         return Stream.of(position.offset(-1, direction), position.offset(+1, direction))
-                .filter(move -> board.inBounds(move) && board.hasPiece(move, color.getOpposite()));
+                .filter(move -> board.hasPiece(move, color.getOpposite()));
     }
 
     private Integer getMoveDirection(Color color) {
